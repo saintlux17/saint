@@ -725,7 +725,7 @@ adder_36 adder_36(
     .vld_o(vld_o36)
     );
 
-adder_36 adder_17(
+adder_36 adder_37(
     .clk(clk),
     .rstn(rstn),
     .vld_i(vld_i37),
