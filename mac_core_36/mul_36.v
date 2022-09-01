@@ -30,13 +30,7 @@ for (i = 1; i <= N; i=i+1) begin
     end
 endgenerate
 
-always@(*)begin
-    if(out1) begin
-        vld_o1 <= 1'd1;
-        end
-    if(out2) begin
-        vld_o2 <= 1'd1;
-        end
-    end
-
+assign vld_o1 = out1 ? 1 : 0;
+assign vld_o2 = out2 ? 1 : 0;
+ 
 endmodule
