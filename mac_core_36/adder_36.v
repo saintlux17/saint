@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
-module adder_new #(parameter N = 36)(
+module adder_36 #(parameter N = 36)(
 input clk, 
 input rstn,
 input vld_i,
-input[8*N-1 :0] din,
+input[16*N-1 :0] din,
 output[21:0] acc_o,
 output       vld_o
 );
@@ -196,7 +196,7 @@ always@(posedge clk, negedge rstn) begin
 		vld_i_d1 <= 0;
 		vld_i_d2 <= 0;
 		vld_i_d3 <= 0;
-		vld_i_d4 <= 0;å
+		vld_i_d4 <= 0;
 		vld_i_d5 <= 0;
 		vld_i_final <= 0;
 	end
