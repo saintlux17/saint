@@ -59,7 +59,7 @@ module top_mac #(parameter N = 576, M = 36, O = 32)(
     output vld_o29,
     output vld_o30,
     output vld_o31,
-    output vld_o32,
+    output vld_o32
     );
 
 wire vld_i1, vld_i2, vld_i3, vld_i4;
