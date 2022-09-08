@@ -22,51 +22,12 @@
 
 // 3 x 3 x 4 data input
 // 3 x 3 x 4 filter input for 40 filters [36DSP : 2filters at a time, 720DSP : 40 filters] 
-module top_mac #(parameter N = 720, M = 36)(
+module top_mac #(parameter N = 576, M = 36, O = 32)(
     input clk,
     input rstn,
     input[8*M-1: 0] din,      // 720*8bit input data
-    input[16*N-1: 0] weight,  // (720*8bit)*2 weight [40 filter weights] [weight 1 / weight 2 /weight 3 / weight 4 / ... / weight 40]  
-    output[21:0] sum1,         //partial sum from each module (3 x 3 x 4)
-    output[21:0] sum2,
-    output[21:0] sum3,
-    output[21:0] sum4,
-    output[21:0] sum5,
-    output[21:0] sum6,
-    output[21:0] sum7,
-    output[21:0] sum8,
-    output[21:0] sum9,
-    output[21:0] sum10,
-    output[21:0] sum11,
-    output[21:0] sum12,
-    output[21:0] sum13,
-    output[21:0] sum14,
-    output[21:0] sum15,    
-    output[21:0] sum16,
-    output[21:0] sum17,
-    output[21:0] sum18,
-    output[21:0] sum19,
-    output[21:0] sum20,
-    output[21:0] sum21,
-    output[21:0] sum22,
-    output[21:0] sum23,
-    output[21:0] sum24,
-    output[21:0] sum25,    
-    output[21:0] sum26,
-    output[21:0] sum27,
-    output[21:0] sum28,
-    output[21:0] sum29,
-    output[21:0] sum30,
-    output[21:0] sum31,
-    output[21:0] sum32,
-    output[21:0] sum33,
-    output[21:0] sum34,
-    output[21:0] sum35,    
-    output[21:0] sum36,
-    output[21:0] sum37,
-    output[21:0] sum38,
-    output[21:0] sum39,
-    output[21:0] sum40,
+    input[16*N-1: 0] weight,  // (720*8bit)*2 weight [32 filter weights] [weight 1 / weight 2 /weight 3 / weight 4 / ... / weight 40]  
+    output[22*O-1: 0] partial,
     output vld_o1,          //valid signal for each filter mac opeation
     output vld_o2,
     output vld_o3,
@@ -99,14 +60,6 @@ module top_mac #(parameter N = 720, M = 36)(
     output vld_o30,
     output vld_o31,
     output vld_o32,
-    output vld_o33,
-    output vld_o34,
-    output vld_o35,
-    output vld_o36,
-    output vld_o37,
-    output vld_o38,
-    output vld_o39,
-    output vld_o40
     );
 
 wire vld_i1, vld_i2, vld_i3, vld_i4;
@@ -163,15 +116,46 @@ localparam mul_29_param = 232*M-1;
 localparam mul_30_param = 240*M-1;
 localparam mul_31_param = 248*M-1;
 localparam mul_32_param = 256*M-1;
-localparam mul_33_param = 264*M-1;
-localparam mul_34_param = 272*M-1;
-localparam mul_35_param = 280*M-1;
-localparam mul_36_param = 288*M-1;
-localparam mul_37_param = 296*M-1;
-localparam mul_38_param = 304*M-1;
-localparam mul_39_param = 312*M-1;
-localparam mul_40_param = 320*M-1;
 
+// adder parameters
+localparam K = 22;
+localparam partial_1_param = K-1;
+localparam partial_2_param = 2*K-1;
+localparam partial_3_param = 3*K-1;
+localparam partial_4_param = 4*K-1;
+localparam partial_5_param = 5*K-1;
+localparam partial_6_param = 6*K-1;
+localparam partial_7_param = 7*K-1;
+localparam partial_8_param = 8*K-1;
+localparam partial_9_param = 9*K-1;
+localparam partial_10_param = 10*K-1;
+localparam partial_11_param = 11*K-1;
+localparam partial_12_param = 12*K-1;
+localparam partial_13_param = 13*K-1;
+localparam partial_14_param = 14*K-1;
+localparam partial_15_param = 15*K-1;
+localparam partial_16_param = 16*K-1;
+localparam partial_17_param = 17*K-1;
+localparam partial_18_param = 18*K-1;
+localparam partial_19_param = 19*K-1;    
+localparam partial_20_param = 20*K-1;
+localparam partial_21_param = 21*K-1;
+localparam partial_22_param = 22*K-1;
+localparam partial_23_param = 23*K-1;
+localparam partial_24_param = 24*K-1;
+localparam partial_25_param = 25*K-1;    
+localparam partial_26_param = 26*K-1;
+localparam partial_27_param = 27*K-1;
+localparam partial_28_param = 28*K-1;
+localparam partial_29_param = 29*K-1;
+localparam partial_30_param = 30*K-1;
+localparam partial_31_param = 31*K-1;
+localparam partial_32_param = 32*K-1;
+    
+    
+    
+    
+    
 //multiplier
 
 mul_36 mul_1(
@@ -355,58 +339,15 @@ mul_36 mul_16(
     .vld_o2(vld_i32)
     );
 
-mul_36 mul_17(
-    .clk(clk), 
-    .in_1(din), 
-    .in_2(weight[mul_33_param -: 288]), 
-    .in_3(weight[mul_34_param -: 288]), 
-    .out1(mul_out33), 
-    .out2(mul_out34),
-    .vld_o1(vld_i33),
-    .vld_o2(vld_i34)
-    );
 
-mul_36 mul_18(
-    .clk(clk), 
-    .in_1(din), 
-    .in_2(weight[mul_35_param -: 288]), 
-    .in_3(weight[mul_36_param -: 288]), 
-    .out1(mul_out35), 
-    .out2(mul_out36),
-    .vld_o1(vld_i35),
-    .vld_o2(vld_i36)
-    );
-
-
-mul_36 mul_19(
-    .clk(clk), 
-    .in_1(din), 
-    .in_2(weight[mul_37_param -: 288]), 
-    .in_3(weight[mul_38_param -: 288]), 
-    .out1(mul_out37), 
-    .out2(mul_out38),
-    .vld_o1(vld_i37),
-    .vld_o2(vld_i38)
-    );
-
-mul_36 mul_20(
-    .clk(clk), 
-    .in_1(din), 
-    .in_2(weight[mul_39_param -: 288]), 
-    .in_3(weight[mul_40_param -: 288]), 
-    .out1(mul_out39), 
-    .out2(mul_out40),
-    .vld_o1(vld_i39),
-    .vld_o2(vld_i40)
-    );
- 
+//adder starts here
 
 adder_36 adder_1(
     .clk(clk),
     .rstn(rstn),
     .vld_i(vld_i1),
     .din(mul_out1),
-    .acc_o(sum1),
+    .acc_o(partial[partial_1_param -: 22]),
     .vld_o(vld_o1)
     );
 
@@ -415,7 +356,7 @@ adder_36 adder_2(
     .rstn(rstn),
     .vld_i(vld_i2),
     .din(mul_out2),
-    .acc_o(sum2),
+    .acc_o(partial[partial_2_param -: 22]),
     .vld_o(vld_o2)
     );
 
@@ -424,7 +365,7 @@ adder_36 adder_3(
     .rstn(rstn),
     .vld_i(vld_i3),
     .din(mul_out3),
-    .acc_o(sum3),
+    .acc_o(partial[partial_3_param -: 22]),
     .vld_o(vld_o3)
     );
     
@@ -433,7 +374,7 @@ adder_36 adder_4(
     .rstn(rstn),
     .vld_i(vld_i4),
     .din(mul_out4),
-    .acc_o(sum4),
+    .acc_o(partial[partial_4_param -: 22]),
     .vld_o(vld_o4)
     );
     
@@ -442,7 +383,7 @@ adder_36 adder_5(
     .rstn(rstn),
     .vld_i(vld_i5),
     .din(mul_out5),
-    .acc_o(sum5),
+    .acc_o(partial[partial_5_param -: 22]),
     .vld_o(vld_o5)
     );
     
@@ -451,7 +392,7 @@ adder_36 adder_6(
     .rstn(rstn),
     .vld_i(vld_i6),
     .din(mul_out6),
-    .acc_o(sum6),
+    .acc_o(partial[partial_6_param -: 22]),
     .vld_o(vld_o6)
     );
 
@@ -460,7 +401,7 @@ adder_36 adder_7(
     .rstn(rstn),
     .vld_i(vld_i7),
     .din(mul_out7),
-    .acc_o(sum7),
+    .acc_o(partial[partial_7_param -: 22]),
     .vld_o(vld_o7)
     );
     
@@ -469,7 +410,7 @@ adder_36 adder_8(
     .rstn(rstn),
     .vld_i(vld_i8),
     .din(mul_out8),
-    .acc_o(sum8),
+    .acc_o(partial[partial_8_param -: 22]),
     .vld_o(vld_o8)
     );   
 
@@ -478,7 +419,7 @@ adder_36 adder_9(
     .rstn(rstn),
     .vld_i(vld_i9),
     .din(mul_out9),
-    .acc_o(sum9),
+    .acc_o(partial[partial_9_param -: 22]),
     .vld_o(vld_o9)
     );   
 
@@ -487,7 +428,7 @@ adder_36 adder_10(
     .rstn(rstn),
     .vld_i(vld_i10),
     .din(mul_out10),
-    .acc_o(sum10),
+    .acc_o(partial[partial_10_param -: 22]),
     .vld_o(vld_o10)
     );   
 
@@ -496,7 +437,7 @@ adder_36 adder_11(
     .rstn(rstn),
     .vld_i(vld_i11),
     .din(mul_out11),
-    .acc_o(sum11),
+    .acc_o(partial[partial_11_param -: 22]),
     .vld_o(vld_o11)
     );
 
@@ -505,7 +446,7 @@ adder_36 adder_12(
     .rstn(rstn),
     .vld_i(vld_i12),
     .din(mul_out12),
-    .acc_o(sum12),
+    .acc_o(partial[partial_12_param -: 22]),
     .vld_o(vld_o12)
     );
 
@@ -514,7 +455,7 @@ adder_36 adder_13(
     .rstn(rstn),
     .vld_i(vld_i13),
     .din(mul_out13),
-    .acc_o(sum13),
+    .acc_o(partial[partial_13_param -: 22]),
     .vld_o(vld_o13)
     );
     
@@ -523,7 +464,7 @@ adder_36 adder_14(
     .rstn(rstn),
     .vld_i(vld_i14),
     .din(mul_out14),
-    .acc_o(sum14),
+    .acc_o(partial[partial_14_param -: 22]),
     .vld_o(vld_o14)
     );
     
@@ -532,7 +473,7 @@ adder_36 adder_15(
     .rstn(rstn),
     .vld_i(vld_i15),
     .din(mul_out15),
-    .acc_o(sum15),
+    .acc_o(partial[partial_15_param -: 22]),
     .vld_o(vld_o15)
     );
     
@@ -541,7 +482,7 @@ adder_36 adder_16(
     .rstn(rstn),
     .vld_i(vld_i16),
     .din(mul_out16),
-    .acc_o(sum16),
+    .acc_o(partial[partial_16_param -: 22]),
     .vld_o(vld_o16)
     );
 
@@ -550,7 +491,7 @@ adder_36 adder_17(
     .rstn(rstn),
     .vld_i(vld_i17),
     .din(mul_out17),
-    .acc_o(sum17),
+    .acc_o(partial[partial_17_param -: 22]),
     .vld_o(vld_o17)
     );
     
@@ -559,7 +500,7 @@ adder_36 adder_18(
     .rstn(rstn),
     .vld_i(vld_i18),
     .din(mul_out18),
-    .acc_o(sum18),
+    .acc_o(partial[partial_18_param -: 22]),
     .vld_o(vld_o18)
     );   
 
@@ -568,7 +509,7 @@ adder_36 adder_19(
     .rstn(rstn),
     .vld_i(vld_i19),
     .din(mul_out19),
-    .acc_o(sum19),
+    .acc_o(partial[partial_19_param -: 22]),
     .vld_o(vld_o19)
     );   
 
@@ -577,7 +518,7 @@ adder_36 adder_20(
     .rstn(rstn),
     .vld_i(vld_i20),
     .din(mul_out20),
-    .acc_o(sum20),
+    .acc_o(partial[partial_20_param -: 22]),
     .vld_o(vld_o20)
     );   
 
@@ -586,7 +527,7 @@ adder_36 adder_21(
     .rstn(rstn),
     .vld_i(vld_i21),
     .din(mul_out21),
-    .acc_o(sum21),
+    .acc_o(partial[partial_21_param -: 22]),
     .vld_o(vld_o21)
     );
 
@@ -595,7 +536,7 @@ adder_36 adder_22(
     .rstn(rstn),
     .vld_i(vld_i22),
     .din(mul_out22),
-    .acc_o(sum22),
+    .acc_o(partial[partial_22_param -: 22]),
     .vld_o(vld_o22)
     );
 
@@ -604,7 +545,7 @@ adder_36 adder_23(
     .rstn(rstn),
     .vld_i(vld_i23),
     .din(mul_out23),
-    .acc_o(sum23),
+    .acc_o(partial[partial_23_param -: 22]),
     .vld_o(vld_o23)
     );
     
@@ -613,7 +554,7 @@ adder_36 adder_24(
     .rstn(rstn),
     .vld_i(vld_i24),
     .din(mul_out24),
-    .acc_o(sum24),
+    .acc_o(partial[partial_24_param -: 22]),
     .vld_o(vld_o24)
     );
     
@@ -622,7 +563,7 @@ adder_36 adder_25(
     .rstn(rstn),
     .vld_i(vld_i25),
     .din(mul_out25),
-    .acc_o(sum25),
+    .acc_o(partial[partial_25_param -: 22]),
     .vld_o(vld_o25)
     );
     
@@ -631,7 +572,7 @@ adder_36 adder_26(
     .rstn(rstn),
     .vld_i(vld_i26),
     .din(mul_out26),
-    .acc_o(sum26),
+    .acc_o(partial[partial_26_param -: 22]),
     .vld_o(vld_o26)
     );
 
@@ -640,7 +581,7 @@ adder_36 adder_27(
     .rstn(rstn),
     .vld_i(vld_i27),
     .din(mul_out27),
-    .acc_o(sum27),
+    .acc_o(partial[partial_27_param -: 22]),
     .vld_o(vld_o27)
     );
     
@@ -649,7 +590,7 @@ adder_36 adder_28(
     .rstn(rstn),
     .vld_i(vld_i28),
     .din(mul_out28),
-    .acc_o(sum28),
+    .acc_o(partial[partial_28_param -: 22]),
     .vld_o(vld_o28)
     );   
 
@@ -658,7 +599,7 @@ adder_36 adder_29(
     .rstn(rstn),
     .vld_i(vld_i29),
     .din(mul_out29),
-    .acc_o(sum29),
+    .acc_o(partial[partial_29_param -: 22]),
     .vld_o(vld_o29)
     );   
 
@@ -667,7 +608,7 @@ adder_36 adder_30(
     .rstn(rstn),
     .vld_i(vld_i30),
     .din(mul_out30),
-    .acc_o(sum30),
+    .acc_o(partial[partial_30_param -: 22]),
     .vld_o(vld_o30)
     );   
 
@@ -676,7 +617,7 @@ adder_36 adder_31(
     .rstn(rstn),
     .vld_i(vld_i31),
     .din(mul_out31),
-    .acc_o(sum31),
+    .acc_o(partial[partial_31_param -: 22]),
     .vld_o(vld_o31)
     );
 
@@ -685,80 +626,9 @@ adder_36 adder_32(
     .rstn(rstn),
     .vld_i(vld_i32),
     .din(mul_out32),
-    .acc_o(sum32),
+    .acc_o(partial[partial_32_param -: 22]),
     .vld_o(vld_o32)
     );
 
-adder_36 adder_33(
-    .clk(clk),
-    .rstn(rstn),
-    .vld_i(vld_i33),
-    .din(mul_out33),
-    .acc_o(sum33),
-    .vld_o(vld_o33)
-    );
-    
-adder_36 adder_34(
-    .clk(clk),
-    .rstn(rstn),
-    .vld_i(vld_i34),
-    .din(mul_out34),
-    .acc_o(sum34),
-    .vld_o(vld_o34)
-    );
-    
-adder_36 adder_35(
-    .clk(clk),
-    .rstn(rstn),
-    .vld_i(vld_i35),
-    .din(mul_out35),
-    .acc_o(sum35),
-    .vld_o(vld_o35)
-    );
-    
-adder_36 adder_36(
-    .clk(clk),
-    .rstn(rstn),
-    .vld_i(vld_i36),
-    .din(mul_out36),
-    .acc_o(sum36),
-    .vld_o(vld_o36)
-    );
 
-adder_36 adder_37(
-    .clk(clk),
-    .rstn(rstn),
-    .vld_i(vld_i37),
-    .din(mul_out37),
-    .acc_o(sum37),
-    .vld_o(vld_o17)
-    );
-    
-adder_36 adder_38(
-    .clk(clk),
-    .rstn(rstn),
-    .vld_i(vld_i38),
-    .din(mul_out38),
-    .acc_o(sum38),
-    .vld_o(vld_o38)
-    );   
-
-adder_36 adder_39(
-    .clk(clk),
-    .rstn(rstn),
-    .vld_i(vld_i39),
-    .din(mul_out39),
-    .acc_o(sum39),
-    .vld_o(vld_o39)
-    );   
-
-adder_36 adder_40(
-    .clk(clk),
-    .rstn(rstn),
-    .vld_i(vld_i40),
-    .din(mul_out40),
-    .acc_o(sum40),
-    .vld_o(vld_o40)
-    );
-    
 endmodule
