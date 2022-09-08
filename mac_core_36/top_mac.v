@@ -70,8 +70,7 @@ wire vld_i17, vld_i18, vld_i19, vld_i20;
 wire vld_i21, vld_i22, vld_i23, vld_i24;
 wire vld_i25, vld_i26, vld_i27, vld_i28;
 wire vld_i29, vld_i30, vld_i31, vld_i32;
-wire vld_i33, vld_i34, vld_i35, vld_i36;
-wire vld_i37, vld_i38, vld_i39, vld_i40;
+
     
 wire[16*M-1:0] mul_out1, mul_out2, mul_out3, mul_out4;
 wire[16*M-1:0] mul_out5, mul_out6, mul_out7, mul_out8;
@@ -81,8 +80,6 @@ wire[16*M-1:0] mul_out17, mul_out18, mul_out19, mul_out20;
 wire[16*M-1:0] mul_out21, mul_out22, mul_out23, mul_out24;
 wire[16*M-1:0] mul_out25, mul_out26, mul_out27, mul_out28;
 wire[16*M-1:0] mul_out29, mul_out30, mul_out31, mul_out32;
-wire[16*M-1:0] mul_out33, mul_out34, mul_out35, mul_out36;
-wire[16*M-1:0] mul_out37, mul_out38, mul_out39, mul_out40;
 
 localparam mul_1_param = 8*M-1;
 localparam mul_2_param = 16*M-1;
